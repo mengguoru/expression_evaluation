@@ -1,3 +1,9 @@
+'''
+expression evaluation
+
+author : mengguoru
+date   : 2016/03/27
+'''
 import re
 
 class Expression:
