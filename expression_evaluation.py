@@ -21,9 +21,14 @@ class Expression:
                     stack_operator.append(expr[i])
                 else:
                     if str(expr[i]) == ')':
-                        temp = stack_operator.pop()
-                        while temp != '(':
-                            stack_out.append(temp)
+                        while len(stack_operator) > 0:
+                            temp = stack_operator.pop()
+                            if temp != '(':
+                                stack_out.append(temp)
+                            else:
+                                break
+                    elif expr[i] == '(':
+                        stack_operator.append(expr[i])
                     else:
                         temp = stack_operator.pop()
                         while self.cmp_Precedence(expr[i],temp) == False:
@@ -45,6 +50,8 @@ class Expression:
             return True
         elif(op1=='+'or op1=='-')and(op2=='+'or op2=='-'):
             return True
+        elif op2=='(':
+            return True
         else:
             return False
     def evaluate_suffix(self,expr):
@@ -52,6 +59,7 @@ class Expression:
         stack = []
         for i in range(len(expr)):
             if str(expr[i]) >= '0' and str(expr[i]) <='9':
+                # print(stack)
                 stack.append(int(expr[i]))
             else:
                 stack.append(self.calculate_2_param(expr[i],stack.pop(),stack.pop()))
@@ -65,9 +73,10 @@ if __name__ == '__main__':
     5 + ((1 + 2) * 4) − 3转成 [5,1,2,'+',4,'*','+',3,'-']
     '''
     a = Expression()
-    b = a.split("5 + ((1 + 2) * 4)−3")
-    print(b)
-    # print(Expression.split.__doc_    print(b)_)
+    b = a.split("5 + ((1 + 2) * 4)-3")
+    print(b) # output: ['5', '+', '(', '(', '1', '+', '2', ')', '*', '4', ')', '-', '3'],test pass
     # 5 1 2 + 4 * + 3 − 对应后缀    后缀求值应该为14
-    c = a.infix_to_suffix(b)
-    print(c)
+    temp = ['5','1','2','+','4','*','+','3','-']
+    print(a.evaluate_suffix(temp)) # outpue : 14 test pass
+    # 5 1 2 + 4 * + 3 −为应输出结果
+    print(a.infix_to_suffix(b))
